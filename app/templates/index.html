@@ -1,0 +1,11 @@
+<h2>DB</h2>
+<table>
+    <tbody>
+    {% for game in games %}
+        <td>{{game.name}}</td>
+        <td>{{game.year}}</td>
+        <td>{{game.desc}}</td>
+        <td>{{game.type}}</td>
+    {% endfor %}
+    </tbody>
+</table>
