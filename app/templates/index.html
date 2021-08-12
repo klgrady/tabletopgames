@@ -1,4 +1,13 @@
 <h2>Table Top Games, Y'all!</h2>
+<form method="POST" action="">Search for
+    <input type="text" name="term" size=25> in 
+    <select name="col">
+        <option value="name">Game Title</option>
+        <option value="type">Game Type</option>
+        <option value="description">Description</option>
+    </select>
+    <input type="submit">&nbsp;&nbsp;&nbsp;<a href="/">View Full List</a>
+</form>
 <table>
     <tbody>
     {% for game in games %}

@@ -28,9 +28,17 @@ class Games(db.Model):
 
 
 
-@app.route('/')
+@app.route('/', methods=["POST","GET"])
 def index():
-    games = Games.query.all()
+    if request.method == "POST":
+        if request.form.get("col") == "name":
+            games = Games.query.filter_by(name=request.form.get("term"))
+        elif request.form.get("col") == "description":
+            games = Games.query.filter(Games.description.contains(request.form.get("term")))
+        else:
+            games = Games.query.filter_by(type=request.form.get("term"))
+    else:
+        games = Games.query.all()
     results = [
         {
             "name": game.name,
