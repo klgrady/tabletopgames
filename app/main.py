@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
@@ -76,3 +76,21 @@ def api_insert():
         return Response(status=417)
 
     return Response(status=201)
+
+@app.route('/v1/games/board', methods=["POST", "GET"])
+def api_games_select():
+    if request.method == "POST":
+        term = request.form.get("keyword")
+    elif request.method == "GET":
+        term = request.args.get("keyword")
+    if term is None:
+        abort(419)
+    games = Games.query.filter(Games.description.contains(term)).filter_by(type="board_game")
+    results = [
+        {
+            "name": game.name,
+            "year": game.year,
+            "desc": game.description,
+            "type": game.type
+        } for game in games]
+    return jsonify(results), 200
