@@ -1,11 +1,13 @@
-<h2>DB</h2>
+<h2>Table Top Games, Y'all!</h2>
 <table>
     <tbody>
     {% for game in games %}
+    <tr>
         <td>{{game.name}}</td>
         <td>{{game.year}}</td>
         <td>{{game.desc}}</td>
         <td>{{game.type}}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>
