@@ -41,15 +41,44 @@ def index():
     else:
         page = request.args.get('page', 1, type=int)
         games = Games.query.paginate(page=page, per_page=20)
-    # results = [
-    #     {
-    #         "name": game.name,
-    #         "year": game.year,
-    #         "desc": game.description,
-    #         "type": game.type
-    #     } for game in games.items]
     return render_template('index.html', games=games)
 
+
+@app.route('/board-games')
+def board_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="board_game").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
+
+@app.route('/strategy-games')
+def strategy_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="strategy_game").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
+
+@app.route('/tile-games')
+def tile_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="tile_game").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
+
+@app.route('/dice-games')
+def dice_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="dice_game").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
+
+@app.route('/card-games')
+def card_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="card_game").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
+
+@app.route('/RPG')
+def rpg_games():
+    page = request.args.get('page', 1, type=int)
+    games = Games.query.filter_by(type="RPG").paginate(page=page, per_page=20)
+    return render_template('index.html', games=games)
 
 @app.route('/insert-games/<name>/<year>/<desc>/<type>')
 def insert(name, year, desc, type):

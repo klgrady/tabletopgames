@@ -4,14 +4,14 @@
         <a class="navbar-brand" href="{{ url_for('index') }}">Tabletop Games</a>
         <div>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">All Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Board Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Strategy Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Role-Playing Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Tile Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Dice Games</a></li>
-                <li class="nav-item"><a class="nav-link" disabled href="">Card Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/">All Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('board_games') }}">Board Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('strategy_games') }}">Strategy Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('rpg_games') }}">Role-Playing Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('tile_games') }}">Tile Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dice_games') }}">Dice Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('card_games') }}">Card Games</a></li>
             </ul>
         </div>
     </nav>
@@ -43,7 +43,7 @@
     <tr>
         <td>{{ game.name }}</td>
         <td>{{ game.year }}</td>
-        <td>{{ game.desc }}</td>
+        <td>{{ game.description }}</td>
         <td>{% if game.type == "board_game" %}
             Board Game
             {% elif game.type == "dice_game" %}
@@ -54,6 +54,8 @@
             Tile Game
             {% elif game.type == "card_game" %}
             Card Game
+            {% elif game.type == "RPG" %}
+            RPG
             {% else %}
             Unknown
         {% endif %}</td>
