@@ -31,22 +31,24 @@ class Games(db.Model):
 @app.route('/', methods=["POST","GET"])
 def index():
     if request.method == "POST":
+        page = request.form.get('page', 1, type=int)
         if request.form.get("col") == "name":
-            games = Games.query.filter_by(name=request.form.get("term"))
+            games = Games.query.filter_by(name=request.form.get("term")).paginate(page=page, per_page=20)
         elif request.form.get("col") == "description":
-            games = Games.query.filter(Games.description.contains(request.form.get("term")))
+            games = Games.query.filter(Games.description.contains(request.form.get("term"))).paginate(page=page, per_page=20)
         else:
-            games = Games.query.filter_by(type=request.form.get("term"))
+            games = Games.query.filter_by(type=request.form.get("term")).paginate(page=page, per_page=20)
     else:
-        games = Games.query.all()
-    results = [
-        {
-            "name": game.name,
-            "year": game.year,
-            "desc": game.description,
-            "type": game.type
-        } for game in games]
-    return render_template('index.html', games=results)
+        page = request.args.get('page', 1, type=int)
+        games = Games.query.paginate(page=page, per_page=20)
+    # results = [
+    #     {
+    #         "name": game.name,
+    #         "year": game.year,
+    #         "desc": game.description,
+    #         "type": game.type
+    #     } for game in games.items]
+    return render_template('index.html', games=games)
 
 
 @app.route('/insert-games/<name>/<year>/<desc>/<type>')

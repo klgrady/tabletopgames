@@ -17,6 +17,30 @@ class TTGSpider():
         
     }
     
+    def parse_rpg(self):
+        html = requests.get(self.urls["rpg"])
+        soup = BeautifulSoup(html.content, 'html.parser')
+        results = soup.find_all("div", class_="div-col")
+        for result in results:
+            game_year = result.find("span", class_="mw-headline").text
+            games_list = result.findAll("li")                           # for each game title within this year, get other info
+            for title in games_list:
+                desc_html = title.find("a", href=True)                  # get the link to the game's page
+                go_next = requests.get('https://en.wikipedia.org' + desc_html.get('href'))
+                dsoup = BeautifulSoup(go_next.content, 'html.parser')   # follow the description rabbit, Alice
+                wrapper = dsoup.find("div", class_="mw-parser-output")
+                description = wrapper.find("p", class_=None).text       # get <p> within div class=mw-parser-output
+                title = title.text.replace("'", "''")                   # escape single quotes
+                description = description.replace("'", "''").strip()    # escape single quotes
+                description = re.sub(r"[\[\d+\]]", '', description)     # remove useless ref numbers
+                data = {"name": title, "year": game_year, "desc": description, "type": 'RPG'}
+                url = 'https://tabletopgames.herokuapp.com/v1/insert'
+                response = requests.post(url=url, data=data)
+                if response.status_code > 299:
+                    print(f"Got {response.status_code} response from server on title")
+                
+        
+
     def parse_board(self, i):
         html = requests.get(self.urls["board"] + str(i))
         soup = BeautifulSoup(html.content, 'html.parser')
@@ -49,9 +73,10 @@ class TTGSpider():
 def main():
     spider_go = TTGSpider()
     #spider_go.dbc()
-    for i in range (4,100):
-        print("Starting on page", i)
-        spider_go.parse_board(i)
+    # for i in range (4,100):
+    #     print("Starting on page", i)
+    #     spider_go.parse_board(i)
+    spider_go.parse_rpg()
 
 if __name__ == "__main__":
     main()
