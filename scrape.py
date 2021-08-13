@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+"""
+    Scraping script to gather the data from BoardGameGeek.com and the Wikipedia list of TTRPG
+"""
 from bs4 import BeautifulSoup
 import requests
 #from flask_sqlalchemy import SQLAlchemy
@@ -14,9 +17,11 @@ class TTGSpider():
     urls = {
         "board": 'https://boardgamegeek.com/browse/boardgame/page/',
         "rpg": "https://en.wikipedia.org/wiki/List_of_tabletop_role-playing_games",
-        
     }
     
+    """
+        Parsing for the Wiki RPG list. Uses the API to insert to the database
+    """
     def parse_rpg(self):
         html = requests.get(self.urls["rpg"])
         soup = BeautifulSoup(html.content, 'html.parser')
@@ -41,6 +46,9 @@ class TTGSpider():
                 
         
 
+    """
+        First attempt at parsing with BeautifulSoup. Generated SQL to insert manually with a client.
+    """
     def parse_board(self, i):
         html = requests.get(self.urls["board"] + str(i))
         soup = BeautifulSoup(html.content, 'html.parser')
@@ -64,19 +72,22 @@ class TTGSpider():
             try:
                 with open('inserts.txt', 'a', encoding="utf-8") as f:
                     print(f"insert into games (name, year, description, type) values ('{name.strip()}', '{year}', '{desc.strip()}', 'board_game');", file=f)
-                #self.cur.execute("insert into games (name, year, description, type) values (?, ?, ?, 'board game')", (game_name.text.strip(), year, game_desc.text.strip()))
+                
             except Exception as e:
                 print(f"Error inserting: {e}")
 
             
 
 def main():
+    # Set up the spider
     spider_go = TTGSpider()
-    #spider_go.dbc()
-    # for i in range (4,100):
-    #     print("Starting on page", i)
-    #     spider_go.parse_board(i)
-    spider_go.parse_rpg()
+
+    # Go, spider, go!
+    spider_go.dbc()
+    for i in range (4,100):
+        print("Starting on page", i)
+        spider_go.parse_board(i)        # parses the board games
+    spider_go.parse_rpg()               # parses the RPGs
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,106 @@
+<head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></head>
+<body>
+    <nav class="navbar nav navbar-dark bg-dark navbar-expand-md">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Tabletop Games</a>
+        <div>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/">All Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('board_games') }}">Board Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('strategy_games') }}">Strategy Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('rpg_games') }}">Role-Playing Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('tile_games') }}">Tile Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dice_games') }}">Dice Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('card_games') }}">Card Games</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="ml-3 mr-3">
+<div class="text-right h6">More tabletop fun than you can shake a stick at!</div>
+
+<form method="POST" action="">Search for
+    <input type="text" name="term" size=25> in 
+    <select name="col">
+        <option value="name">Game Title</option>
+        <option value="description">Description</option>
+    </select>
+    <input type="submit">&nbsp;&nbsp;&nbsp;<a href="/">View Full List</a>
+</form>
+<div class="table-responsive">
+
+<table class="table table-sm table-borderless mb-0">
+        <thead class="thead-dark">
+        <tr>
+        </thead>
+        <th>Title</th>
+        <th>Release Year</th>
+        <th>Description</th>
+        <th>Game Type</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for game in games.items %}
+    <tr>
+        <td>{{ game.name }}</td>
+        <td>{{ game.year }}</td>
+        <td>{{ game.description }}</td>
+        <td>{% if game.type == "board_game" %}
+            Board Game
+            {% elif game.type == "dice_game" %}
+            Dice Game
+            {% elif game.type == "strategy_game" %}
+            Strategy Game
+            {% elif game.type == "tile_game" %}
+            Tile Game
+            {% elif game.type == "card_game" %}
+            Card Game
+            {% elif game.type == "RPG" %}
+            RPG
+            {% else %}
+            Unknown
+        {% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<!-- Pagination links, totally yanked from betterprogramming.pub/simple-flask-pagination-example -->
+<!-- This was nearly entirely stolen from betterprogramming.pub/simple-flask-pagination-example with a few modifications for taste -->
+<!-- Author Mclordemuraishe -->
+<div class="pagination" style="padding-top: 30px;">
+    <a href="{{ url_for('rpg_games', page=games.prev_num) }}"
+       class="btn btn-outline-dark 
+       {% if games.page == 1 %}disabled{% endif %}">
+        &laquo;         <!-- left arrow to go back a page -->
+    </a>
+<!-- Loop through the number of pages to display a link for each-->
+<!-- iter_pages allows you to define which page numbers will appear alongside the active page-->
+    {% for page_num in games.iter_pages(left_edge=0, right_edge=0, left_current=1, right_current=2) %}
+        {% if page_num %}
+<!-- Check for the active page and set the link to "Active"-->
+            {% if games.page == page_num %}
+            <a href="{{ url_for('rpg_games', page=page_num) }}"
+               class="btn btn-dark">        <!-- dark defines current page -->
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('rpg_games', page=page_num) }}"
+               class="btn btn-outline-dark">        
+                {{ page_num }}
+            </a>
+            {% endif %}
+        
+        {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('rpg_games', page=games.next_num) }}"
+       class="btn btn-outline-dark 
+       {% if games.page == games.pages %}disabled{% endif %}">
+        &raquo;         <!-- right arrow to go forward a page -->
+    </a>
+</div>
+<p class="text-left mt-3">
+   Showing page {{ games.page }} of {{ games.pages }}
+</p>
+</div>
+</body>
